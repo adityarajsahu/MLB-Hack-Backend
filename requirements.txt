@@ -1,0 +1,13 @@
+fastapi
+uvicorn
+passlib
+python-jose
+pydantic[email]
+qdrant-client
+pydantic-settings
+python-dotenv
+google-generativeai
+MLB-StatsAPI
+sentence_transformers
+mem0ai
+aiohttp
