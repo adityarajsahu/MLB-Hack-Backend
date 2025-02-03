@@ -10,7 +10,6 @@ from database import Database
 import statsapi
 from typing import List, Optional, Dict
 import json
-import uvicorn
 import logging
 
 
@@ -401,3 +400,7 @@ def parse_career_stats(stats_text: str) -> dict:
             parsed_stats[key] = value
 
     return parsed_stats
+
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=8000)
