@@ -401,7 +401,3 @@ def parse_career_stats(stats_text: str) -> dict:
             parsed_stats[key] = value
 
     return parsed_stats
-
-
-if __name__ == "__main__":
-    uvicorn.run("main:app", host = "127.0.0.1", port = 8080, reload = False)
