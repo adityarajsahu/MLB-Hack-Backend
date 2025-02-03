@@ -403,6 +403,6 @@ def parse_career_stats(stats_text: str) -> dict:
 
     return parsed_stats
 
-if __name__ == "__main__":
-    port = int(os.getenv("PORT", 8000))  # Railway provides the PORT env variable
-    uvicorn.run(app, host="0.0.0.0", port=port)
+# if __name__ == "__main__":
+#     port = int(os.getenv("PORT", 8000))  # Railway provides the PORT env variable
+#     uvicorn.run(app, host="0.0.0.0", port=port)
