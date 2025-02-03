@@ -11,6 +11,8 @@ import statsapi
 from typing import List, Optional, Dict
 import json
 import logging
+import uvicorn
+import os
 
 
 from rag_utils.embedder import generate_embedding
@@ -402,5 +404,5 @@ def parse_career_stats(stats_text: str) -> dict:
     return parsed_stats
 
 if __name__ == "__main__":
-    import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    port = int(os.getenv("PORT", 8000))  # Railway provides the PORT env variable
+    uvicorn.run(app, host="0.0.0.0", port=port)
