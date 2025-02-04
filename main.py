@@ -280,17 +280,13 @@ def get_response_from_rag(request: UserQueryRAG):
     try:
         user_query = request.query
    
-         # Step 1: Ask model which collection(s) to query
-        collection_decision = determine_relevant_collection(user_query)
         # Step 2: Generate query embedding
         query_embedding = generate_embedding(user_query)
 
         # Step 3: Retrieve only relevant documents
         game_docs, player_docs = [], []
-        if collection_decision in ["games", "both"]:
-            game_docs = retrieve_documents(qdrant_client, Config.GAMES_COLLECTION, query_embedding)
-        if collection_decision in ["players", "both"]:
-            player_docs = retrieve_documents(qdrant_client, Config.PLAYERS_COLLECTION, query_embedding)
+        game_docs = retrieve_documents(qdrant_client, Config.GAMES_COLLECTION, query_embedding)
+        player_docs = retrieve_documents(qdrant_client, Config.PLAYERS_COLLECTION, query_embedding)
 
         # Step 4: Summarize retrieved documents using Config.PROMPT
         summary = summarize_documents(user_query, game_docs, player_docs)
@@ -300,7 +296,6 @@ def get_response_from_rag(request: UserQueryRAG):
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error processing request: {str(e)}")
-
 
 
 def summarize_documents(query: str, game_docs: List[dict], player_docs: List[dict]) -> str:
@@ -323,23 +318,6 @@ def summarize_documents(query: str, game_docs: List[dict], player_docs: List[dic
     # Ensure JSON output compliance
     return response.text if response else '{"answer": "Failed to generate summary."}'
 
-
-def determine_relevant_collection(query: str) -> str:
-    """ Ask the model whether the query relates to games, players, or both. """
-    
-    classification_prompt = f"""
-    You are an expert in Major League Baseball. Determine whether the following user query is related to:
-    - "games" (if it is about match results, scores, teams, or events)
-    - "players" (if it is about individual player statistics, performance, or records)
-    - "both" (if it requires information from both categories)
-    
-    User Query: {query}
-    
-    Respond with only one word: "games", "players", or "both".
-    """
-
-    response = model.generate_content(classification_prompt)
-    return response.text.strip().lower()
 
 @app.post("/playerCareerStats")
 def get_player_career_stats(payload: PlayerStatsRequest):
